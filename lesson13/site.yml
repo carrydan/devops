@@ -1,0 +1,10 @@
+---
+- hosts: webservers
+  become: yes
+  roles:
+    - apache
+
+- hosts: database
+  become: yes
+  roles:
+    - mysql
