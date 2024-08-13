@@ -14,17 +14,39 @@ provider "yandex" {
   folder_id = var.yandex_folder_id
 }
 
-data "yandex_vpc_network" "my_vpc" {
-  network_id = var.vpc_id
+variable "yandex_token" {
+  description = "Yandex Cloud OAuth token"
+  type        = string
 }
 
-data "yandex_vpc_subnet" "all_subnets" {
-  for_each = toset(data.yandex_vpc_network.my_vpc.subnet_ids)
-  subnet_id = each.value
+variable "yandex_cloud_id" {
+  description = "ID of the Yandex.Cloud"
+  type        = string
 }
 
-locals {
-  subnets_in_zone = [for s in data.yandex_vpc_subnet.all_subnets : s.id if s.zone == var.zone]
+variable "yandex_folder_id" {
+  description = "ID of the folder в Yandex.Cloud"
+  type        = string
+}
+
+variable "subnet_id" {
+  description = "ID of the subnet"
+  type        = string
+}
+
+variable "zone" {
+  description = "Availability zone"
+  type        = string
+}
+
+variable "ssh_public_key_path" {
+  description = "Path to the SSH public key"
+  type        = string
+}
+
+variable "ssh_private_key_path" {
+  description = "Path to the SSH private key"
+  type        = string
 }
 
 resource "yandex_compute_instance" "vm_instance" {

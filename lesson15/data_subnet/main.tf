@@ -24,7 +24,7 @@ variable "cloud_id" {
 }
 
 variable "folder_id" {
-  description = "ID of the folder in Yandex.Cloud"
+  description = "ID of the folder в Yandex.Cloud"
   type        = string
 }
 
@@ -40,12 +40,4 @@ data "yandex_vpc_network" "my_vpc" {
 data "yandex_vpc_subnet" "all_subnets" {
   for_each = toset(data.yandex_vpc_network.my_vpc.subnet_ids)
   subnet_id = each.key
-}
-
-output "subnets_info" {
-  value = {for s in data.yandex_vpc_subnet.all_subnets : s.subnet_id => {
-    id   = s.id
-    name = s.name
-    zone = s.zone
-  }}
 }
