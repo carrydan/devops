@@ -20,12 +20,12 @@ variable "yandex_token" {
 }
 
 variable "yandex_cloud_id" {
-  description = "ID of the Yandex.Cloud"
+  description = "Yandex Cloud ID"
   type        = string
 }
 
 variable "yandex_folder_id" {
-  description = "ID of the folder в Yandex.Cloud"
+  description = "Yandex Folder ID"
   type        = string
 }
 
