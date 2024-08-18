@@ -1,0 +1,15 @@
+Script started on 2024-08-18 17:06:18+03:00 [COMMAND="docker run -d --name wp-mysql --network wp-net            -e MYSQL_ROOT_PASSWORD=your_root_password            -e MYSQL_DATABASE=wordpress            -e MYSQL_USER=wp_user            -e MYSQL_PASSWORD=your_wp_password            -v wp-db:/var/lib/mysql            mysql:5.7 &&            docker run -d --name wordpress --network wp-net            -e WORDPRESS_DB_HOST=wp-mysql:3306            -e WORDPRESS_DB_USER=wp_user            -e WORDPRESS_DB_PASSWORD=your_wp_password            -e WORDPRESS_DB_NAME=wordpress            -v wp-data:/var/www/html            -v /path/to/your/apache/config:/etc/apache2/sites-enabled            -p 8081:80            wordpress" TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="120" LINES="30"]
+30d125c7f439e11ac07fd968d6095c3083670504b7986aff0a8635f3c48d0825
+64e837eeb0ff0d476da888fcb5cea9033b529cb6496269b6f6d660fc05eed784
+
+Script done on 2024-08-18 17:06:20+03:00 [COMMAND_EXIT_CODE="0"]
+Starting wp-mysql container...
+b7ffd047012815c05a7ca4f9618337cea4a5ee62af198aec60229a3c86c892d6
+Starting wordpress container...
+15cebeff162e4b460d63002147cd6e09d528b71acc6921b627543cc83ccf8d9d
+Containers started successfully.
+Starting wp-mysql container...
+e0f889602aab827e8b360259ab3e317792b9c6b9d6258d7851a5b7bb267f4ee6
+Starting wordpress container...
+08bf0e6dfde6a920a5aacbe6e09cc65734417106cef0400aa47e54e0177a7cb1
+Containers started successfully.
