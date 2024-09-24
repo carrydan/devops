@@ -1,2 +1,0 @@
----
-mysql_service_name: "{{ 'mysqld' if ansible_facts['distribution'] == 'CentOS' else 'mysql' }}"

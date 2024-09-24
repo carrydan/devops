@@ -1,2 +1,0 @@
----
-apache_service_name: "{{ 'httpd' if ansible_facts['distribution'] == 'CentOS' else 'apache2' }}"

@@ -1,8 +1,0 @@
----
-- name: Install MySQL on CentOS
-  import_tasks: tasks/centos.yml
-  when: ansible_facts['distribution'] == 'CentOS'
-
-- name: Install MySQL on Ubuntu
-  import_tasks: tasks/ubuntu.yml
-  when: ansible_facts['distribution'] == 'Ubuntu'

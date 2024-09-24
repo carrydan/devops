@@ -1,2 +1,0 @@
-[webservers]
-dev ansible_host=192.168.56.10 ansible_user=vagrant ansible_private_key_file=/home/carrydan/lesson12/id_rsa
