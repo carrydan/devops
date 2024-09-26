@@ -1,0 +1,133 @@
+name: CI Pipeline lesson28
+
+permissions:
+  contents: read
+  packages: write
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Сборка и тестирование приложений
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    strategy:
+      matrix:
+        app: [hello-world, hello-jenkins, hello-devops]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Установка JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Ручная установка Maven 3.9.2
+        run: |
+          MAVEN_VERSION=3.9.2
+          wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
+          tar -xvzf apache-maven-$MAVEN_VERSION-bin.tar.gz
+          sudo mv apache-maven-$MAVEN_VERSION /opt/maven
+          sudo rm -f /usr/bin/mvn
+          sudo ln -s /opt/maven/bin/mvn /usr/bin/mvn
+          mvn -version
+
+      - name: Кэширование зависимостей Maven
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('lesson28/**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven
+
+      - name: Сборка приложений с Maven
+        run: mvn -B package --file lesson28/${{ matrix.app }}/pom.xml
+
+      - name: Запуск тестов
+        run: mvn test --file lesson28/${{ matrix.app }}/pom.xml
+
+      - name: Загрузка артефакта сборки
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.app }}-artifact
+          path: lesson28/${{ matrix.app }}/target/*.jar
+
+  docker:
+    name: Сборка и загрузка Docker-образа
+    runs-on: ubuntu-latest
+    needs: build
+    continue-on-error: false
+    strategy:
+      matrix:
+        app: [hello-world, hello-jenkins, hello-devops]
+    env:
+      ACTIONS_STEP_DEBUG: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Загрузка артефакта сборки
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.app }}-artifact
+          path: lesson28/${{ matrix.app }}/target
+
+      - name: Проверка наличия JAR-файла
+        run: |
+          if ls lesson28/${{ matrix.app }}/target/*.jar 1> /dev/null 2>&1; then
+            echo "JAR-файл найден."
+          else
+            echo "JAR-файл не найден!"
+            exit 1
+          fi
+
+      - name: Автоматическое создание Dockerfile
+        run: |
+          mkdir -p lesson28/${{ matrix.app }}
+          if [ ! -f lesson28/${{ matrix.app }}/Dockerfile ]; then
+            echo 'FROM openjdk:17-jdk-alpine' > lesson28/${{ matrix.app }}/Dockerfile
+            echo 'WORKDIR /app' >> lesson28/${{ matrix.app }}/Dockerfile
+            echo 'COPY target/*.jar app.jar' >> lesson28/${{ matrix.app }}/Dockerfile
+            echo 'EXPOSE 8080' >> lesson28/${{ matrix.app }}/Dockerfile
+            echo 'ENTRYPOINT ["java", "-jar", "/app/app.jar"]' >> lesson28/${{ matrix.app }}/Dockerfile
+          fi
+
+      - name: Просмотр содержимого Dockerfile
+        run: cat lesson28/${{ matrix.app }}/Dockerfile
+
+      - name: Проверка структуры директорий перед сборкой
+        run: ls -l lesson28/${{ matrix.app }}
+
+      - name: Настройка Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Вход в GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Сборка и загрузка Docker-образа
+        uses: docker/build-push-action@v4
+        with:
+          context: lesson28/${{ matrix.app }}
+          file: lesson28/${{ matrix.app }}/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
+          build-args: BUILDKIT_PROGRESS=plain
+
+      - name: Просмотр журналов Docker (при ошибке)
+        if: failure()
+        run: |
+          echo "Сборка Docker завершилась с ошибкой."
+          # Дополнительные команды для отладки можно добавить здесь
