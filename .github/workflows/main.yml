@@ -1,22 +1,26 @@
 name: CI Pipeline lesson28
 
+permissions:
+  contents: read
+  packages: write
+
 on:
   push:
     branches:
-      - main  # Workflow будет запускаться только при пушах в ветку main
+      - main
   pull_request:
     branches:
-      - main  # Workflow будет запускаться при pull request в ветку main
-  workflow_dispatch:  # Возможность ручного запуска
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
     name: Сборка и тестирование приложений
     runs-on: ubuntu-latest
-    continue-on-error: false  # Явное указание прерывания при ошибках
+    continue-on-error: false
     strategy:
       matrix:
-        app: [hello-world, hello-jenkins, hello-devops]  # Список приложений в lesson28
+        app: [hello-world, hello-jenkins, hello-devops]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -60,12 +64,12 @@ jobs:
     name: Сборка и загрузка Docker-образа
     runs-on: ubuntu-latest
     needs: build
-    continue-on-error: false  # Явное указание прерывания при ошибках
+    continue-on-error: false
     strategy:
       matrix:
         app: [hello-world, hello-jenkins, hello-devops]
     env:
-      ACTIONS_STEP_DEBUG: true  # Включение расширенных логов
+      ACTIONS_STEP_DEBUG: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -120,7 +124,7 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
-          build-args: BUILDKIT_PROGRESS=plain  # Более подробные логи сборки
+          build-args: BUILDKIT_PROGRESS=plain
 
       - name: Просмотр журналов Docker (при ошибке)
         if: failure()
