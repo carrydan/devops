@@ -13,6 +13,7 @@ jobs:
   build:
     name: Сборка и тестирование приложений
     runs-on: ubuntu-latest
+    continue-on-error: false  # Явное указание прерывания при ошибках
     strategy:
       matrix:
         app: [hello-world, hello-jenkins, hello-devops]  # Список приложений в lesson28
@@ -59,9 +60,12 @@ jobs:
     name: Сборка и загрузка Docker-образа
     runs-on: ubuntu-latest
     needs: build
+    continue-on-error: false  # Явное указание прерывания при ошибках
     strategy:
       matrix:
         app: [hello-world, hello-jenkins, hello-devops]
+    env:
+      ACTIONS_STEP_DEBUG: true  # Включение расширенных логов
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -71,6 +75,15 @@ jobs:
         with:
           name: ${{ matrix.app }}-artifact
           path: lesson28/${{ matrix.app }}/target
+
+      - name: Проверка наличия JAR-файла
+        run: |
+          if ls lesson28/${{ matrix.app }}/target/*.jar 1> /dev/null 2>&1; then
+            echo "JAR-файл найден."
+          else
+            echo "JAR-файл не найден!"
+            exit 1
+          fi
 
       - name: Автоматическое создание Dockerfile
         run: |
@@ -82,6 +95,9 @@ jobs:
             echo 'EXPOSE 8080' >> lesson28/${{ matrix.app }}/Dockerfile
             echo 'ENTRYPOINT ["java", "-jar", "/app/app.jar"]' >> lesson28/${{ matrix.app }}/Dockerfile
           fi
+
+      - name: Просмотр содержимого Dockerfile
+        run: cat lesson28/${{ matrix.app }}/Dockerfile
 
       - name: Проверка структуры директорий перед сборкой
         run: ls -l lesson28/${{ matrix.app }}
@@ -104,3 +120,10 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
+          build-args: BUILDKIT_PROGRESS=plain  # Более подробные логи сборки
+
+      - name: Просмотр журналов Docker (при ошибке)
+        if: failure()
+        run: |
+          echo "Сборка Docker завершилась с ошибкой."
+          # Дополнительные команды для отладки можно добавить здесь
