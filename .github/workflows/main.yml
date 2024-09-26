@@ -36,7 +36,7 @@ jobs:
           sudo ln -s /opt/maven/bin/mvn /usr/bin/mvn  # Создаем новую ссылку
           mvn -version
 
-      - name: Cache Maven dependencies
+      - name: Cache Maven dependencies  # Кэширование зависимостей Maven
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
@@ -46,13 +46,13 @@ jobs:
       - name: List directory contents  # Проверка структуры директорий
         run: ls -R
 
-      - name: Build with Maven
+      - name: Build with Maven  # Сборка приложений с Maven
         run: mvn -B package --file lesson28/${{ matrix.app }}/pom.xml
 
-      - name: Run Tests
+      - name: Run Tests  # Запуск тестов
         run: mvn test --file lesson28/${{ matrix.app }}/pom.xml
 
-      - name: Upload build artifact
+      - name: Upload build artifact  # Загрузка артефакта сборки
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.app }}-artifact
@@ -69,18 +69,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Create Dockerfile if not exists  # Автоматическое создание Dockerfile
+        run: |
+          for app in hello-world hello-jenkins hello-devops; do
+            mkdir -p lesson28/$app
+            if [ ! -f lesson28/$app/Dockerfile ]; then
+              echo 'FROM openjdk:17-jdk-alpine' > lesson28/$app/Dockerfile
+              echo 'WORKDIR /app' >> lesson28/$app/Dockerfile
+              echo 'COPY target/*.jar app.jar' >> lesson28/$app/Dockerfile
+              echo 'EXPOSE 8080' >> lesson28/$app/Dockerfile
+              echo 'ENTRYPOINT ["java", "-jar", "/app/app.jar"]' >> lesson28/$app/Dockerfile
+            fi
+          done
+
       - name: Set up Docker Buildx  # Настройка Buildx
         run: |
           docker buildx create --use
           docker buildx inspect --bootstrap
 
-      - name: Build and Push Docker image
-        run: |
-          docker buildx build --platform linux/amd64 -t ghcr.io/${{ github.repository }}/{{ matrix.app }}:latest ./lesson28/${{ matrix.app }} --push
-
-      - name: Log in to GitHub Container Registry
+      - name: Log in to GitHub Container Registry  # Вход в GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker image  # Сборка и загрузка Docker-образов
+        run: |
+          docker buildx build --platform linux/amd64 -t ghcr.io/${{ github.repository }}/{{ matrix.app }}:latest --file lesson28/${{ matrix.app }}/Dockerfile lesson28/${{ matrix.app }} --push
