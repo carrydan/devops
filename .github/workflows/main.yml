@@ -3,10 +3,10 @@ name: CI Pipeline lesson28
 on:
   push:
     branches:
-      - lesson28  # Workflow будет запускаться только при пушах в ветку lesson28
+      - main  # Workflow будет запускаться только при пушах в ветку main
   pull_request:
     branches:
-      - lesson28  # Workflow будет запускаться при pull request в ветку lesson28
+      - main  # Workflow будет запускаться при pull request в ветку main
   workflow_dispatch:  # Возможность ручного запуска
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app: [hello-world, hello-jenkins, hello-devops]
+        app: [hello-world, hello-jenkins, hello-devops]  # Список приложений в lesson28
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
