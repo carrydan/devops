@@ -76,13 +76,11 @@ jobs:
         run: |
           mkdir -p lesson28/${{ matrix.app }}
           if [ ! -f lesson28/${{ matrix.app }}/Dockerfile ]; then
-            cat <<EOF > lesson28/${{ matrix.app }}/Dockerfile
-FROM openjdk:17-jdk-alpine
-WORKDIR /app
-COPY target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-EOF
+            echo 'FROM openjdk:17-jdk-alpine' > lesson28/${{ matrix.app }}/Dockerfile
+            echo 'WORKDIR /app' >> lesson28/${{ matrix.app }}/Dockerfile
+            echo 'COPY target/*.jar app.jar' >> lesson28/${{ matrix.app }}/Dockerfile
+            echo 'EXPOSE 8080' >> lesson28/${{ matrix.app }}/Dockerfile
+            echo 'ENTRYPOINT ["java", "-jar", "/app/app.jar"]' >> lesson28/${{ matrix.app }}/Dockerfile
           fi
 
       - name: Проверка структуры директорий перед сборкой
