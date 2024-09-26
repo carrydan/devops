@@ -69,9 +69,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Docker Buildx  # Настройка Buildx
+        run: |
+          docker buildx create --use
+          docker buildx inspect --bootstrap
+
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/{{ matrix.app }}:latest lesson28/${{ matrix.app }}
+          docker buildx build --platform linux/amd64 -t ghcr.io/${{ github.repository }}/{{ matrix.app }}:latest lesson28/${{ matrix.app }} --push
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -79,7 +84,3 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push Docker image
-        run: |
-          docker push ghcr.io/${{ github.repository }}/{{ matrix.app }}:latest
