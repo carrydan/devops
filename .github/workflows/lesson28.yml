@@ -8,7 +8,8 @@ on:
     branches:
       - lesson28
   workflow_dispatch:
-
+- name: List directory contents
+  run: ls -R
 jobs:
   build:
     name: Build and Test Applications
