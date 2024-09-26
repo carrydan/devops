@@ -33,11 +33,12 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('lesson28/**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
+      - name: List directory contents  # Исправленный шаг для проверки структуры директорий
+        run: ls -R
+
       - name: Build with Maven
         run: mvn -B package --file lesson28/${{ matrix.app }}/pom.xml
-      - name: List directory contents
-         run: ls -R
-         
+
       - name: Run Tests
         run: mvn test --file lesson28/${{ matrix.app }}/pom.xml
 
