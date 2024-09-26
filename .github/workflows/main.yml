@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app: [hello-world, hello-jenkins, hello-devops]
+        app: [hello-world, hello-jenkins, hello-devops]  # Список приложений в lesson28
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,9 +43,6 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('lesson28/**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-      - name: Проверка структуры директорий
-        run: ls -R
-
       - name: Сборка приложений с Maven
         run: mvn -B package --file lesson28/${{ matrix.app }}/pom.xml
 
@@ -69,18 +66,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Загрузка артефакта сборки
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.app }}-artifact
+          path: lesson28/${{ matrix.app }}/target
+
       - name: Автоматическое создание Dockerfile
         run: |
-          for app in hello-world hello-jenkins hello-devops; do
-            mkdir -p lesson28/$app
-            if [ ! -f lesson28/$app/Dockerfile ]; then
-              echo 'FROM openjdk:17-jdk-alpine' > lesson28/$app/Dockerfile
-              echo 'WORKDIR /app' >> lesson28/$app/Dockerfile
-              echo 'COPY target/*.jar app.jar' >> lesson28/$app/Dockerfile
-              echo 'EXPOSE 8080' >> lesson28/$app/Dockerfile
-              echo 'ENTRYPOINT ["java", "-jar", "/app/app.jar"]' >> lesson28/$app/Dockerfile
-            fi
-          done
+          mkdir -p lesson28/${{ matrix.app }}
+          if [ ! -f lesson28/${{ matrix.app }}/Dockerfile ]; then
+            cat <<EOF > lesson28/${{ matrix.app }}/Dockerfile
+            FROM openjdk:17-jdk-alpine
+            WORKDIR /app
+            COPY target/*.jar app.jar
+            EXPOSE 8080
+            ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+            EOF
+          fi
 
       - name: Проверка структуры директорий перед сборкой
         run: ls -l lesson28/${{ matrix.app }}
