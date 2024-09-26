@@ -82,6 +82,9 @@ jobs:
             fi
           done
 
+      - name: Debug path structure  # Проверка структуры директорий перед сборкой
+        run: ls -l lesson28/${{ matrix.app }}
+
       - name: Set up Docker Buildx  # Настройка Buildx
         run: |
           docker buildx create --use
