@@ -32,7 +32,8 @@ jobs:
           wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
           tar -xvzf apache-maven-$MAVEN_VERSION-bin.tar.gz
           sudo mv apache-maven-$MAVEN_VERSION /opt/maven
-          sudo ln -s /opt/maven/bin/mvn /usr/bin/mvn
+          sudo rm -f /usr/bin/mvn  # Удаляем существующую символическую ссылку
+          sudo ln -s /opt/maven/bin/mvn /usr/bin/mvn  # Создаем новую ссылку
           mvn -version
 
       - name: Cache Maven dependencies
