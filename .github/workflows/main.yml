@@ -26,10 +26,13 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Set up Maven 3.9.2  # Установка Maven 3.9.2
+      - name: Install Maven 3.9.2 manually  # Ручная установка Maven 3.9.2
         run: |
-          sudo apt-get update
-          sudo apt-get install -y maven
+          MAVEN_VERSION=3.9.2
+          wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
+          tar -xvzf apache-maven-$MAVEN_VERSION-bin.tar.gz
+          sudo mv apache-maven-$MAVEN_VERSION /opt/maven
+          sudo ln -s /opt/maven/bin/mvn /usr/bin/mvn
           mvn -version
 
       - name: Cache Maven dependencies
