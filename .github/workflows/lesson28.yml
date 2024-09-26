@@ -8,8 +8,7 @@ on:
     branches:
       - lesson28
   workflow_dispatch:
-- name: List directory contents
-  run: ls -R
+
 jobs:
   build:
     name: Build and Test Applications
@@ -33,6 +32,9 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('lesson28/**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
+
+      - name: List directory contents  # Исправленный шаг для проверки структуры директорий
+        run: ls -R
 
       - name: Build with Maven
         run: mvn -B package --file lesson28/${{ matrix.app }}/pom.xml
