@@ -1,0 +1,31 @@
+Script started on 2024-07-02 21:05:52+03:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="120" LINES="30"]
+                                                                                                                        ]0;kali@carrydan: ~[0m[27m[24m[J[32m┌──([1m[32m[34mkali㉿carrydan[0m[34m[32m)-[[1m[32m[39m~[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004h[7m[36mjava[39m[7m [7m[32m-version[27m[39m[13D[27m[36mj[27m[36ma[27m[36mv[27m[36ma[39m[27m [27m[32m-[27m[32mv[27m[32me[27m[32mr[27m[32ms[27m[32mi[27m[32mo[27m[32mn[39m[?1l>[?2004l
+openjdk version "21.0.2" 2024-01-16
+OpenJDK Runtime Environment (build 21.0.2+13-Debian-2)
+OpenJDK 64-Bit Server VM (build 21.0.2+13-Debian-2, mixed mode, sharing)
+                                                                                                                        ]0;kali@carrydan: ~
+[0m[27m[24m[J[32m┌──([1m[32m[34mkali㉿carrydan[0m[34m[32m)-[[1m[32m[39m~[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004h[7m[4m[32msudo[24m[39m[7m [7m[36mupdate-alternatives[39m[7m [7m[32m--config[39m[7m [1m[7mjava[0m[27m[38D[27m[4m[32ms[27m[4m[32mu[27m[4m[32md[27m[4m[32mo[24m[39m[27m [27m[36mu[27m[36mp[27m[36md[27m[36ma[27m[36mt[27m[36me[27m[36m-[27m[36ma[27m[36ml[27m[36mt[27m[36me[27m[36mr[27m[36mn[27m[36ma[27m[36mt[27m[36mi[27m[36mv[27m[36me[27m[36ms[39m[27m [27m[32m-[27m[32m-[27m[32mc[27m[32mo[27m[32mn[27m[32mf[27m[32mi[27m[32mg[39m[27m [27m[1mj[27m[1ma[27m[1mv[27m[1ma[0m[?1l>[?2004l[0mj[0ma[0mv[0ma
+[sudo] пароль для kali: 
+Есть 3 варианта для альтернативы java (предоставляет /usr/bin/java).
+
+  Выбор   Путь                                     Приор Состояние
+------------------------------------------------------------
+* 0            /usr/lib/jvm/java-21-openjdk-amd64/bin/java   2111      автоматический режим
+  1            /usr/lib/jvm/java-11-openjdk-amd64/bin/java   1111      ручной режим
+  2            /usr/lib/jvm/java-17-openjdk-amd64/bin/java   1711      ручной режим
+  3            /usr/lib/jvm/java-21-openjdk-amd64/bin/java   2111      ручной режим
+
+Нажмите «enter», чтобы не менять текущий выбор[*], или введите нужное число: 
+                                                                                                                        ]0;kali@carrydan: ~
+[0m[27m[24m[J[32m┌──([1m[32m[34mkali㉿carrydan[0m[34m[32m)-[[1m[32m[39m~[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004h[7m[36mjava[39m[7m [7m[32m-version[27m[39m[13D[27m[36mj[27m[36ma[27m[36mv[27m[36ma[39m[27m [27m[32m-[27m[32mv[27m[32me[27m[32mr[27m[32ms[27m[32mi[27m[32mo[27m[32mn[39m[?1l>[?2004l
+openjdk version "21.0.2" 2024-01-16
+OpenJDK Runtime Environment (build 21.0.2+13-Debian-2)
+OpenJDK 64-Bit Server VM (build 21.0.2+13-Debian-2, mixed mode, sharing)
+                                                                                                                        ]0;kali@carrydan: ~
+[0m[27m[24m[J[32m┌──([1m[32m[34mkali㉿carrydan[0m[34m[32m)-[[1m[32m[39m~[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004h[7m[36mexit[27m[39m[27m[36me[27m[36mx[27m[36mi[27m[36mt[39m[?1l>[?2004l
+
+Script done on 2024-07-02 21:06:28+03:00 [COMMAND_EXIT_CODE="0"]

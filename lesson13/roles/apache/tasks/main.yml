@@ -1,0 +1,8 @@
+---
+- name: Install Apache on CentOS
+  import_tasks: tasks/centos.yml
+  when: ansible_facts['distribution'] == 'CentOS'
+
+- name: Install Apache on Ubuntu
+  import_tasks: tasks/ubuntu.yml
+  when: ansible_facts['distribution'] == 'Ubuntu'
